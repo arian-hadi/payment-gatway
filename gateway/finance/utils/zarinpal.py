@@ -68,6 +68,7 @@ def zpal_payment_checker(merchant_id, amount, authority):
     try:
         response = requests.post(settings.ZARINPAL['gateway_callback_url'], json=data)
         response_data = response.json()
+        print(f"Verification response: {response_data}")
 
         if response_data['data']['code'] in [100, 101]:  # Successful transaction codes
             return True, response_data['data']['ref_id']
