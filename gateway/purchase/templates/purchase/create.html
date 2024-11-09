@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title%} <title> Purchase create </title> {% endblock %}
+
+{% block content %}
+    {% if purchase %} Purchase number {{ purchase.id }} created, status: {{purchase.get_status_display}} {% else %} Purchase not created {% endif %}
+{% endblock %}

@@ -10,3 +10,5 @@ class PricingView(View):
     def get(self, request, *args, **kwargs):
         template_name = 'package/pricing.html'
         return render(request, template_name, self.get_context_data())
+    
+        
