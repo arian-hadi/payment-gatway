@@ -7,6 +7,15 @@ class Package(models.Model):
     days = models.PositiveSmallIntegerField()
     created_at = models.DateTimeField(auto_now_add = True)
     modified_at = models.DateTimeField(auto_now=True)
+    is_enable = models.BooleanField(default= True)
+
+    def __str__(self):
+        return self.title
+    
+
+class PackageAttribute(models.Model):
+    package = models.ForeignKey(Package, related_name="attributes", on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
