@@ -23,10 +23,10 @@ class GateWay(models.Model):
         (FUNCTION_ZARIN, ('zarin'))
     )
     
-    title = models.CharField(max_length=100, verbose_name=('title')),
+    title = models.CharField(max_length=100, verbose_name=('title'), null = True)
     gatway_url_request = models.CharField(max_length=150, verbose_name=('gateway url request'), null=True, blank=True)
     gateway_verify_url = models.CharField(max_length=150, verbose_name=('gateway urlverification'), null=True, blank=True)
-    gateway_code = models.BigIntegerField(verbose_name=('gateway code'), choices= GATEWAY_FUNCTIONS)
+    gateway_code = models.CharField(max_length=150, verbose_name=('gateway code'), choices= GATEWAY_FUNCTIONS)
     is_enable = models.BooleanField(verbose_name=('is enabled'),default=True)
     auth_data = models.CharField(verbose_name=('data authentication'),null = True, blank = True)
 
@@ -82,11 +82,24 @@ class Payment(models.Model):
         super().__init__(*args, **kwargs)
         self._b_is_paid = self.is_paid
     
+
+    def get_handler_data(self):
+        return dict(merchant_id = settings.ZARINPAL['merchant_id'], amount = self.amount , description = self.title,
+                    user_email = self.user.email ,user_mobile = getattr(self.user,'phone_number',None), 
+                    callback = 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json'
+                    )
+
+    
     @property
     def bank_page(self):
         handler = self.gateway.get_request_handler()
         if handler is not None:
-            return handler(self.gateway, self)
+            data = self.get_handler_data()
+            link, authority = handler(**data)
+            if authority is not None:
+                self.authority = authority
+                self.save()
+            return link
         
     @property
     def title(self):
@@ -98,7 +111,7 @@ class Payment(models.Model):
     def verify(self, data):
         handler = self.gateway.get_verify_handler()
         if not self.is_paid and handler is not None:
-            handler(self, data)
+            handler(**data)
         return self.is_paid
         
     def get_gateway(self):

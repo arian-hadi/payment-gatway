@@ -2,5 +2,10 @@
 {% block title%} <title> Purchase create </title> {% endblock %}
 
 {% block content %}
-    {% if purchase %} Purchase number {{ purchase.id }} created, status: {{purchase.get_status_display}} {% else %} Purchase not created {% endif %}
+    {% if purchase %} 
+        <p>Purchase number {{ purchase.id }} created, status: {{purchase.get_status_display}}</p>
+        <a href = "{% url 'pay' purchase.payment.invoice_number %}"> Pay with credit card </a>
+    {% else %} 
+        <p>Purchase not created</p>
+    {% endif %}
 {% endblock %}

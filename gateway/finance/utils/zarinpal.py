@@ -1,30 +1,8 @@
-# from django.conf import settings
-# from suds.client import Client
-
-
-# def zpal_request_handler(merchant_id, amount, description, user_email,user_mobile, callback):
-#     client = Client(settings.ZARINPAL['gateway_request_url'])
-#     result = client.service.PaymentRequest(
-#         merchant_id, amount, description,
-#         user_mobile, user_email,callback,
-#     )
-#     print(f"ZarinPal Response: Status={result.Status}, Authority={result.Authority}")
-#     if result.Status == 100:
-#         return 'https://sandbox.zarinpal.com/pg/StartPay/' + result.Authority, result.Authority
-#     else:
-#         print(f"Error with ZarinPal request: Status={result.Status}")
-#         return None, None
-    
-# def zpal_payment_checker(merchant_id, amount, authority):
-#     client = Client(settings.ZARINPAL['gateway_callback_url'])
-#     result = client.service.PaymentVerification(merchant_id, authority, amount)
-#     is_paid = True if result.status in [100,101] else False
-#     return is_paid, result.RefID
-    
 import requests
 from django.conf import settings
 
 def zpal_request_handler(merchant_id, amount, description, user_email, user_mobile, callback):
+    print(f"Amount: {amount}") 
     data = {
         "merchant_id": merchant_id,
         "amount": amount,

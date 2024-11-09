@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %} <title>Payment detail</title> {% endblock %}
+
+{% block content %}
+<!--<p> title: {{payment.purchase.title}}</p> -->
+<p>payment id: {{payment.invoice_number}}</p>
+<p>payment amount: {{payment.amount}}</p>
+Gateways:
+    {% for gateway in gateways %}
+        <p><a href = "{% url 'payment-gateway'  payment.invoice_number gateway.gateway_code %}">{{ gateway.title }}</a></p>
+    {% endfor %}
+{% endblock %}
